@@ -1,8 +1,8 @@
 name "motion_generator"
 
 import_types_from "motion_generatorTypes.hpp"
-#import_types_from "controldev/ControlDevTypes.hpp"
-#import_types_from "locomotion_switcher/locomotion_switcherTypes.hpp"
+import_types_from "controldev/ControlDevTypes.hpp"
+import_types_from "locomotion_switcher/locomotion_switcherTypes.hpp"
 import_types_from "base"
 import_types_from "std"
 
@@ -31,6 +31,6 @@ task_context "Task" do
 
 
     ## ------ Task Activation ------##
-    periodic 0.01
+    periodic 0.1
 end
 

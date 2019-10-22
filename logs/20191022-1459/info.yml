@@ -1,0 +1,7 @@
+---
+- time: 20191022-1459
+  cmdline: "/home/marta/rock/gui/vizkit/bin/rock-display "
+  robot_name: default
+  robot_type: default
+  app_name: motion_generator
+  app_dir: "/home/marta/rock/control/orogen/motion_generator"
