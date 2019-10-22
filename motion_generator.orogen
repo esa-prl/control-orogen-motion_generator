@@ -1,0 +1,36 @@
+name "motion_generator"
+
+import_types_from "motion_generatorTypes.hpp"
+#import_types_from "controldev/ControlDevTypes.hpp"
+#import_types_from "locomotion_switcher/locomotion_switcherTypes.hpp"
+import_types_from "base"
+import_types_from "std"
+
+task_context "Task" do
+    needs_configuration
+    
+    
+    ## ------ Configuration ------##
+    #property "config_value", "/std/string"
+
+    
+    ## ------ Input Ports ------##
+    #input_port "input", "/std/string"
+    
+
+    ## ------ Output Ports ------##
+    # motion command for exoter
+    output_port("motion_command", "base/commands/Motion2D").
+        doc("Output commands to the wheels and steering")
+    # ptu_command used in exoter
+    output_port("ptu_command", "/base/commands/Joints").
+        doc("PAN and TILT command vector")
+    # time when a motion command is sent
+    output_port("motion_command_time", "base/Time").
+        doc("time when a motion_command is sent.")
+
+
+    ## ------ Task Activation ------##
+    periodic 0.01
+end
+
