@@ -31,6 +31,6 @@ task_context "Task" do
 
 
     ## ------ Task Activation ------##
-    periodic 0.1
+    periodic 0.01
 end
 
