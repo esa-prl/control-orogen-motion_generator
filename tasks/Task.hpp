@@ -34,8 +34,7 @@ namespace motion_generator{
         MotionChange motion[N] = {
             { 0.0, 0.0, 1, false},
             { 1.0, 0.03, 1, false},
-            { 10.0, 0.0, 1, false}};
-            //{ 167.6667, 0.0, 1, false}};
+            { 66.667, 0.0, 1, false}};
 
         bool pointTurn, start;
         locomotion_switcher::LocomotionMode locomotion_mode;

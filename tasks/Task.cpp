@@ -51,8 +51,6 @@ void Task::updateHook()
 {
     TaskBase::updateHook();
 
-    //std::cout << "[motion_generator] UpdateHook" << std::endl;
-    
     if (start)
     {
         startTime = base::Time::now();
@@ -62,19 +60,11 @@ void Task::updateHook()
     // update time (current = now - start)
     currentTime = base::Time::now() - startTime;
 
-    // check if there is a command to be exec: 
     for (int i = 0; i < N; i++)
     {
-        /*
-        std::cout << "currenttime=" << currentTime.toSeconds() << std::endl;
-        std::cout << "motiontime=" << motion[i].time << std::endl;
-        std::cout << "motionexec=" << motion[i].exec << std::endl;
-        std::cout << "if1=" << (currentTime.toSeconds() > motion[i].time)  << std::endl;
-        std::cout << "if2=" << (!motion[i].exec) << std::endl;
-        */
+        // check if there is a command to be exec: 
         if ( (currentTime.toSeconds() > motion[i].time) && (!motion[i].exec) )
         {
-            // update motion_command
             switch (motion[i].descr)
             {
                 case 1 : motion_command.translation = motion[i].value;
@@ -82,15 +72,13 @@ void Task::updateHook()
                 case 2 : motion_command.rotation = motion[i].value;
                          break;
             }
-            // write motion command port
+
             _motion_command.write(motion_command);
             std::cout << currentTime.toSeconds() << ": " << "motion command sent = " << motion_command.translation << ","
                 << motion_command.rotation << std::endl;
-            // set exec to true
             motion[i].exec = true;
         }
     }
-    std::cout << std::endl;
 }
 
 void Task::errorHook()
