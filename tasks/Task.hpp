@@ -6,6 +6,7 @@
 #include "motion_generator/TaskBase.hpp"
 #include <base/commands/Joints.hpp>
 #include "controldev/JoystickTaskBase.hpp"
+#include <vector>
 
 
 struct MotionChange
