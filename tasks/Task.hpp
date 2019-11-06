@@ -2,7 +2,7 @@
 
 #ifndef MOTION_GENERATOR_TASK_TASK_HPP
 #define MOTION_GENERATOR_TASK_TASK_HPP
-#include "locomotion_switcher/locomotion_switcherTypes.hpp"
+//#include "locomotion_switcher/locomotion_switcherTypes.hpp"
 #include "motion_generator/TaskBase.hpp"
 #include <base/commands/Joints.hpp>
 #include "controldev/JoystickTaskBase.hpp"
@@ -11,9 +11,9 @@
 struct MotionChange
 {
     double time;
-    double value;
-    int descr;
-    bool exec;
+    double translational_vel;
+    double rotational_vel;
+    bool isExecuted;
 };
 
 namespace motion_generator{
@@ -25,19 +25,14 @@ namespace motion_generator{
 
         base::commands::Motion2D motion_command;
 
-        /*double motion[3][3] = {
-                { 0, 0, 1, false },
-                { 1, 0.03, 1, false },
-                { 167.67, 0, 1, false },
-        };*/
         static const int N = 3;
         MotionChange motion[N] = {
-            { 0.0, 0.0, 1, false},
-            { 1.0, 0.03, 1, false},
-            { 66.667, 0.0, 1, false}};
+            { 0.0, 1.0, 0.0, false},
+            { 1.0, 2.0, 0.02, false},
+            { 5.0, 3.0, 0.0, false}};
 
         bool pointTurn, start;
-        locomotion_switcher::LocomotionMode locomotion_mode;
+        //locomotion_switcher::LocomotionMode locomotion_mode;
         base::Time startTime, currentTime;
 
     public:

@@ -4,7 +4,7 @@
 #include <base/commands/Joints.hpp>
 
 using namespace motion_generator;
-using namespace locomotion_switcher;
+//using namespace locomotion_switcher;
 
 Task::Task(std::string const& name)
     : TaskBase(name)
@@ -30,10 +30,7 @@ bool Task::configureHook()
     // Initialize the motion_command message parameters
     motion_command.translation = 0.0;
     motion_command.rotation = 0.0;
-
-    pointTurn = false;
-
-    locomotion_mode = LocomotionMode::DRIVING;
+    //locomotion_mode = LocomotionMode::DRIVING;
 
     start = true; 
 
@@ -51,6 +48,7 @@ void Task::updateHook()
 {
     TaskBase::updateHook();
 
+    // if first call of updateHook set the startTime
     if (start)
     {
         startTime = base::Time::now();
@@ -62,21 +60,21 @@ void Task::updateHook()
 
     for (int i = 0; i < N; i++)
     {
-        // check if there is a command to be exec: 
-        if ( (currentTime.toSeconds() > motion[i].time) && (!motion[i].exec) )
+        // check if there is a command to be executed 
+        if ( (currentTime.toSeconds() > motion[i].time) && (!motion[i].isExecuted) )
         {
-            switch (motion[i].descr)
-            {
-                case 1 : motion_command.translation = motion[i].value;
-                         break;
-                case 2 : motion_command.rotation = motion[i].value;
-                         break;
-            }
-
+            // read and write to output the motion command
+            motion_command.translation = motion[i].translational_vel;
+            motion_command.rotation = motion[i].rotational_vel;
             _motion_command.write(motion_command);
-            std::cout << currentTime.toSeconds() << ": " << "motion command sent = " << motion_command.translation << ","
+            motion[i].isExecuted = true;
+            
+            // write the timestamp of the motion command
+            _motion_command_time.write(base::Time::now());
+
+            std::cout << currentTime.toSeconds() << ": " 
+                << "motion command sent = " << motion_command.translation << ","
                 << motion_command.rotation << std::endl;
-            motion[i].exec = true;
         }
     }
 }
@@ -92,7 +90,8 @@ void Task::errorHook()
     motion_command.translation = 0.0;
     motion_command.rotation = 0.0;
     _motion_command.write(motion_command);
-
+    // write the timestamp of the motion command
+    _motion_command_time.write(base::Time::now());
 }
 
 void Task::stopHook()
@@ -103,7 +102,8 @@ void Task::stopHook()
     motion_command.translation = 0.0;
     motion_command.rotation = 0.0;
     _motion_command.write(motion_command); 
-
+    // write the timestamp of the motion command
+    _motion_command_time.write(base::Time::now());
 }
 
 void Task::cleanupHook()
