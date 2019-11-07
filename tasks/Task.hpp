@@ -27,10 +27,13 @@ namespace motion_generator{
         base::commands::Motion2D motion_command;
 
         static const int N = 3;
-        MotionChange motion[N] = {
-            { 0.0, 1.0, 0.0, false},
-            { 1.0, 2.0, 0.02, false},
-            { 5.0, 3.0, 0.0, false}};
+        std::vector<MotionChange> motion;
+        /*
+        motion.resize(N);
+        motion[0] = { 0.0, 1.0, 0.0, false};
+        motion[1] = { 1.0, 2.0, 0.02, false};
+        motion[2] = { 5.0, 3.0, 0.0, false};
+        */
 
         bool pointTurn, start;
         //locomotion_switcher::LocomotionMode locomotion_mode;

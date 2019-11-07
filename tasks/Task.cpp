@@ -30,9 +30,22 @@ bool Task::configureHook()
     // Initialize the motion_command message parameters
     motion_command.translation = 0.0;
     motion_command.rotation = 0.0;
-    //locomotion_mode = LocomotionMode::DRIVING;
 
     start = true; 
+    
+    // initialize the motion vector
+    /*
+    motion.push_back(MotionChange());
+    motion[0].time = 0.0;
+    motion[0].translational_vel = 0.6;
+    motion[0].rotational_vel = 0.0; 
+    motion[0].isExecuted = false;
+    */
+
+    motion.resize(N);
+    motion[0] = {0.0, 0.0, 0.0, false};
+    motion[1] = {1.0, 0.06, 0.0, false};
+    motion[2] = {11.0, 0.0, 0.0, false};
 
     return true;
 }
