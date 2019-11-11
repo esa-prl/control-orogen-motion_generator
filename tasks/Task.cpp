@@ -4,7 +4,6 @@
 #include <base/commands/Joints.hpp>
 
 using namespace motion_generator;
-//using namespace locomotion_switcher;
 
 Task::Task(std::string const& name)
     : TaskBase(name)
@@ -32,21 +31,54 @@ bool Task::configureHook()
     motion_command.rotation = 0.0;
 
     start = true; 
-    
+
     // initialize the motion vector
+    //motion.resize(N);
+    
+    // test
+    /* 
+    motion.push_back(MotionChange()); motion[0] = {0.0, 0.0, 0.0, false};
+    motion.push_back(MotionChange()); motion[1] = {2.0, 0.005, 0.0, false};
+    motion.push_back(MotionChange()); motion[2] = {motion[1].time + 0.3, 0.01, 0.0, false};
+    motion.push_back(MotionChange()); motion[3] = {motion[2].time + 0.3, 0.015, 0.0, false};
+    motion.push_back(MotionChange()); motion[4] = {motion[3].time + 0.3, 0.02, 0.0, false};
+    motion.push_back(MotionChange()); motion[5] = {motion[4].time + 0.3, 0.025, 0.0, false};
+    motion.push_back(MotionChange()); motion[6] = {motion[5].time + 0.3, 0.03, 0.0, false};
+    motion.push_back(MotionChange()); motion[7] = {motion[6].time + 0.3, 0.035, 0.0, false};
+    motion.push_back(MotionChange()); motion[8] = {motion[7].time + 0.3, 0.04, 0.0, false};
+    motion.push_back(MotionChange()); motion[9] = {motion[8].time + 0.3, 0.045, 0.0, false};
+    motion.push_back(MotionChange()); motion[10] = {motion[9].time+ 0.3, 0.05, 0.0, false};
+    motion.push_back(MotionChange()); motion[11] = {motion[10].time+0.3, 0.055, 0.0, false};
+    motion.push_back(MotionChange()); motion[12] = {motion[11].time+0.3, 0.06, 0.0, false};
+    motion.push_back(MotionChange()); motion[13] = {motion[12].time+10, 0.0, 0.0, false};
+    N = motion.size();
+    */ 
+
+    // reverse test
+     
+    motion.push_back(MotionChange()); motion[0] = {0.0, 0.0, 0.0, false};
+    motion.push_back(MotionChange()); motion[1] = {2.0,                  -0.005, 0.0, false};
+    motion.push_back(MotionChange()); motion[2] = {motion[1].time + 0.3, -0.01, 0.0, false};
+    motion.push_back(MotionChange()); motion[3] = {motion[2].time + 0.3, -0.015, 0.0, false};
+    motion.push_back(MotionChange()); motion[4] = {motion[3].time + 0.3, -0.02, 0.0, false};
+    motion.push_back(MotionChange()); motion[5] = {motion[4].time + 0.3, -0.025, 0.0, false};
+    motion.push_back(MotionChange()); motion[6] = {motion[5].time + 0.3, -0.03, 0.0, false};
+    motion.push_back(MotionChange()); motion[7] = {motion[6].time + 0.3, -0.035, 0.0, false};
+    motion.push_back(MotionChange()); motion[8] = {motion[7].time + 0.3, -0.04, 0.0, false};
+    motion.push_back(MotionChange()); motion[9] = {motion[8].time + 0.3, -0.045, 0.0, false};
+    motion.push_back(MotionChange()); motion[10] = {motion[9].time+ 0.3, -0.05, 0.0, false};
+    motion.push_back(MotionChange()); motion[11] = {motion[10].time+0.3, -0.055, 0.0, false};
+    motion.push_back(MotionChange()); motion[12] = {motion[11].time+0.3, -0.06, 0.0, false};
+    motion.push_back(MotionChange()); motion[13] = {motion[12].time+10, 0.0, 0.0, false};
+    N = motion.size();
+    
+
     /*
-    motion.push_back(MotionChange());
-    motion[0].time = 0.0;
-    motion[0].translational_vel = 0.6;
-    motion[0].rotational_vel = 0.0; 
-    motion[0].isExecuted = false;
+    motion.push_back(MotionChange()); motion[0] = {2.0, -0.06, 0.0, false};
+    motion.push_back(MotionChange()); motion[1] = {12.0, 0.0, 0.0, false};
     */
-
-    motion.resize(N);
-    motion[0] = {0.0, 0.0, 0.0, false};
-    motion[1] = {1.0, 0.06, 0.0, false};
-    motion[2] = {11.0, 0.0, 0.0, false};
-
+    N = motion.size();
+    
     return true;
 }
 
