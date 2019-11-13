@@ -4,6 +4,7 @@
 #include <base/commands/Joints.hpp>
 
 using namespace motion_generator;
+using namespace locomotion_switcher;
 
 Task::Task(std::string const& name)
     : TaskBase(name)
@@ -29,12 +30,50 @@ bool Task::configureHook()
     // Initialize the motion_command message parameters
     motion_command.translation = 0.0;
     motion_command.rotation = 0.0;
+    locomotion_mode = LocomotionMode::DRIVING;
+    not_started = true; 
 
-    start = true; 
+    // Read the motion commands from the config file
+    commands_time = _commandsTime.get();
+    commands_translation = _commandsTranslation.get();
+    commands_rotation = _commandsRotation.get();
+    commands_locomotion_mode = _commandsLocomotionMode.get();
 
-    // initialize the motion vector
+    // sanity check: empty vector
+    if (commands_time.size() == 0 ||
+        commands_time.size() == 0 ||
+        commands_translation.size() == 0 ||
+        commands_locomotion_mode.size() == 0)
+    {
+        std::cerr << "MOTION_GENERATOR ERROR: the fields (time, translation and rotation) of the motion commands in the motion_generator::MotionCommands.yml file MUST all have at least one element" << std::endl;
+        return false;
+    }
+
+    // sanity check: dimentions mismatch
+    if (commands_time.size() != commands_translation.size() ||
+        commands_time.size() != commands_rotation.size() ||
+        commands_time.size() != commands_locomotion_mode.size())
+    {
+        std::cerr << "MOTION_GENERATOR ERROR: the fields (time, translation and rotation) of the motion commands in the motion_generator::MotionCommands.yml file MUST be of the same lenght" << std::endl;
+        return false;
+    }
+    
+    N = commands_time.size();
+    std::cout << "[Motion Generator: configureHook]" << "N=" << N << std::endl;
     //motion.resize(N);
     
+    // initialize the MotionChange vector
+    for (int i = 0; i < N; i++)
+    {
+        MotionChange motion_change;
+        motion_change.time = commands_time[i]; 
+        motion_change.translational_vel = commands_translation[i]; 
+        motion_change.rotational_vel = commands_rotation[i];
+        motion_change.is_executed = false;
+        motion.push_back(motion_change);
+    }
+
+    // MANUAL INITIALIZATIONS FOR TESTS PURPOSES
     // test
     /* 
     motion.push_back(MotionChange()); motion[0] = {0.0, 0.0, 0.0, false};
@@ -55,7 +94,7 @@ bool Task::configureHook()
     */ 
 
     // reverse test
-     
+    /*     
     motion.push_back(MotionChange()); motion[0] = {0.0, 0.0, 0.0, false};
     motion.push_back(MotionChange()); motion[1] = {2.0,                  -0.005, 0.0, false};
     motion.push_back(MotionChange()); motion[2] = {motion[1].time + 0.3, -0.01, 0.0, false};
@@ -71,7 +110,7 @@ bool Task::configureHook()
     motion.push_back(MotionChange()); motion[12] = {motion[11].time+0.3, -0.06, 0.0, false};
     motion.push_back(MotionChange()); motion[13] = {motion[12].time+10, 0.0, 0.0, false};
     N = motion.size();
-    
+    */
 
     /*
     motion.push_back(MotionChange()); motion[0] = {2.0, -0.06, 0.0, false};
@@ -94,10 +133,10 @@ void Task::updateHook()
     TaskBase::updateHook();
 
     // if first call of updateHook set the startTime
-    if (start)
+    if (not_started)
     {
         startTime = base::Time::now();
-        start = false;
+        not_started = false;
     }
 
     // update time (current = now - start)
@@ -106,14 +145,28 @@ void Task::updateHook()
     for (int i = 0; i < N; i++)
     {
         // check if there is a command to be executed 
-        if ( (currentTime.toSeconds() > motion[i].time) && (!motion[i].isExecuted) )
+        if ( (currentTime.toSeconds() > motion[i].time) && (!motion[i].is_executed) )
         {
             // read and write to output the motion command
             motion_command.translation = motion[i].translational_vel;
             motion_command.rotation = motion[i].rotational_vel;
+            // change locomotion mode for driving or wheelwalking
+            if(motion[i].locomotion_mode == 1 &&
+               locomotion_mode == LocomotionMode::WHEEL_WALKING)
+            {
+                locomotion_mode = LocomotionMode::DRIVING;
+                _locomotion_mode.write(locomotion_mode);
+            }
+            else if(motion[i].locomotion_mode == 2 &&
+                    locomotion_mode == LocomotionMode::DRIVING)
+            {
+                locomotion_mode = LocomotionMode::WHEEL_WALKING;
+                _locomotion_mode.write(locomotion_mode);
+            }
+
             _motion_command.write(motion_command);
-            motion[i].isExecuted = true;
-            
+            motion[i].is_executed = true;
+
             // write the timestamp of the motion command
             _motion_command_time.write(base::Time::now());
 

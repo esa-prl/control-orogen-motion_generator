@@ -6,6 +6,7 @@
 #include <base/commands/Joints.hpp>
 #include "controldev/JoystickTaskBase.hpp"
 #include <vector>
+#include "locomotion_switcher/locomotion_switcherTypes.hpp"
 
 
 struct MotionChange
@@ -13,8 +14,10 @@ struct MotionChange
     double time;
     double translational_vel;
     double rotational_vel;
-    bool isExecuted;
+    int locomotion_mode;
+    bool is_executed;
 };
+
 
 namespace motion_generator{
 
@@ -24,12 +27,13 @@ namespace motion_generator{
     protected:
 
         base::commands::Motion2D motion_command;
-
-        int N; 
+        int N;
         std::vector<MotionChange> motion;
-
-        bool pointTurn, start;
+        std::vector<double> commands_time, commands_translation, commands_rotation;
+        std::vector<double> commands_locomotion_mode;
+        bool not_started;
         base::Time startTime, currentTime;
+        locomotion_switcher::LocomotionMode locomotion_mode;
 
     public:
         Task(std::string const& name = "motion_generator::Task");
