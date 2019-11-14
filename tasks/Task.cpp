@@ -70,6 +70,7 @@ bool Task::configureHook()
         motion_change.translational_vel = commands_translation[i]; 
         motion_change.rotational_vel = commands_rotation[i];
         motion_change.is_executed = false;
+        motion_change.locomotion_mode = (int) commands_locomotion_mode[i];
         motion.push_back(motion_change);
     }
 
@@ -154,12 +155,14 @@ void Task::updateHook()
             if(motion[i].locomotion_mode == 1 &&
                locomotion_mode == LocomotionMode::WHEEL_WALKING)
             {
+                std::cout << "switched to DRIVING" << std::endl;
                 locomotion_mode = LocomotionMode::DRIVING;
                 _locomotion_mode.write(locomotion_mode);
             }
             else if(motion[i].locomotion_mode == 2 &&
                     locomotion_mode == LocomotionMode::DRIVING)
             {
+                std::cout << "switched to WHEEL WALKING" << std::endl;
                 locomotion_mode = LocomotionMode::WHEEL_WALKING;
                 _locomotion_mode.write(locomotion_mode);
             }
