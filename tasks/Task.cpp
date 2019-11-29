@@ -148,25 +148,25 @@ void Task::updateHook()
         // check if there is a command to be executed 
         if ( (currentTime.toSeconds() > motion[i].time) && (!motion[i].is_executed) )
         {
-            // read and write to output the motion command
+            // read the motion command
             motion_command.translation = motion[i].translational_vel;
             motion_command.rotation = motion[i].rotational_vel;
+
             // change locomotion mode for driving or wheelwalking
-            if(motion[i].locomotion_mode == 1 &&
-               locomotion_mode == LocomotionMode::WHEEL_WALKING)
+            if(motion[i].locomotion_mode == 1)
             {
                 std::cout << "switched to DRIVING" << std::endl;
                 locomotion_mode = LocomotionMode::DRIVING;
                 _locomotion_mode.write(locomotion_mode);
             }
-            else if(motion[i].locomotion_mode == 2 &&
-                    locomotion_mode == LocomotionMode::DRIVING)
+            else if(motion[i].locomotion_mode == 2)
             {
                 std::cout << "switched to WHEEL WALKING" << std::endl;
                 locomotion_mode = LocomotionMode::WHEEL_WALKING;
                 _locomotion_mode.write(locomotion_mode);
             }
 
+            // send the motion command
             _motion_command.write(motion_command);
             motion[i].is_executed = true;
 
