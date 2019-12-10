@@ -18,6 +18,12 @@ task_context "Task" do
         doc "Lists containing the rotation of the motion commands"
     property("commandsLocomotionMode","/std/vector</double>").
         doc "Lists containing the rotation of the motion commands"
+    property("commandsPan","double").
+        doc ""
+    property("commandsTilt","double").
+        doc ""
+    property("commandsPTU","int").
+        doc ""
 
 
     ## ------ Input Ports ------##
@@ -34,7 +40,13 @@ task_context "Task" do
     # time when a motion command is sent
     output_port("motion_command_time", "base/Time").
         doc("time when a motion_command is sent.")
+    # locomotion mode command
     output_port("locomotion_mode", "locomotion_switcher/LocomotionMode").doc("Locomotion mode, to     be forwarded to locomotion switcher and to override autonomous l.m. switching.")
+    # pan command
+    output_port("pan_command_out", "double")
+    # tilt command
+    output_port("tilt_command_out", "double")
+
 
     ## ------ Task Activation ------##
     periodic 0.01
