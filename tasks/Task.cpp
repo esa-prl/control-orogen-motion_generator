@@ -214,6 +214,10 @@ void Task::errorHook()
     _motion_command.write(motion_command);
     // write the timestamp of the motion command
     _motion_command_time.write(base::Time::now());
+
+    // When an error occurs, send ptu to zero pan and tilt 
+    _pan_command_out.write(0.0);
+    _tilt_command_out.write(0.0);
 }
 
 void Task::stopHook()
@@ -226,6 +230,10 @@ void Task::stopHook()
     _motion_command.write(motion_command); 
     // write the timestamp of the motion command
     _motion_command_time.write(base::Time::now());
+
+    // When the task is stopped, send ptu to zero pan and tilt 
+    _pan_command_out.write(0.0);
+    _tilt_command_out.write(0.0);
 }
 
 void Task::cleanupHook()
