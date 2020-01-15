@@ -22,33 +22,37 @@ struct MotionChange
 namespace motion_generator
 {
 
-class Task : public TaskBase
-{
-    friend class TaskBase;
+namespace motion_generator{
 
-  protected:
-    base::commands::Motion2D motion_command;
-    int N;
-    std::vector<MotionChange> motion;
-    std::vector<double> commands_time, commands_translation, commands_rotation;
-    std::vector<double> commands_locomotion_mode;
-    bool not_started;
-    base::Time startTime, currentTime;
-    locomotion_switcher::LocomotionMode locomotion_mode;
+    class Task : public TaskBase
+    {
+	friend class TaskBase;
+    protected:
 
-  public:
-    Task(std::string const& name = "motion_generator::Task");
-    Task(std::string const& name, RTT::ExecutionEngine* engine);
+        base::commands::Motion2D motion_command;
+        int N, commands_ptu;
+        std::vector<MotionChange> motion;
+        std::vector<double> commands_time, commands_translation, commands_rotation;
+        std::vector<double> commands_locomotion_mode;
+        bool not_started;
+        base::Time startTime, currentTime;
+        locomotion_switcher::LocomotionMode locomotion_mode;
+        double commands_pan, commands_tilt;
 
-    ~Task();
+    public:
+        Task(std::string const& name = "motion_generator::Task");
+        Task(std::string const& name, RTT::ExecutionEngine* engine);
 
-    bool configureHook();
-    bool startHook();
-    void updateHook();
-    void errorHook();
-    void stopHook();
-    void cleanupHook();
-};
+	    ~Task();
+
+        bool configureHook();
+        bool startHook();
+        void updateHook();
+        void errorHook();
+        void stopHook();
+        void cleanupHook();
+    };
+>>>>>>> 4e4221141be9783d9b2f28fdb4cdb8a06f1cde23
 }
 
 #endif
