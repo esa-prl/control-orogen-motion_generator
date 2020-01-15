@@ -2,16 +2,28 @@ name "motion_generator"
 
 import_types_from "motion_generatorTypes.hpp"
 import_types_from "controldev/ControlDevTypes.hpp"
-#import_types_from "locomotion_switcher/locomotion_switcherTypes.hpp"
 import_types_from "base"
 import_types_from "std"
+import_types_from "locomotion_switcher/locomotion_switcherTypes.hpp"
 
 task_context "Task" do
     needs_configuration
 
-
     ## ------ Configuration ------##
-    #property "config_value", "/std/string"
+    property("commandsTime","/std/vector</double>").
+        doc "Lists containing the time of the motion commands"
+    property("commandsTranslation","/std/vector</double>").
+        doc "Lists containing the translation of the motion commands"
+    property("commandsRotation","/std/vector</double>").
+        doc "Lists containing the rotation of the motion commands"
+    property("commandsLocomotionMode","/std/vector</double>").
+        doc "Lists containing the rotation of the motion commands"
+    property("commandsPan","double").
+        doc ""
+    property("commandsTilt","double").
+        doc ""
+    property("commandsPTU","int").
+        doc ""
 
 
     ## ------ Input Ports ------##
@@ -27,7 +39,13 @@ task_context "Task" do
         doc("PAN and TILT command vector")
     # time when a motion command is sent
     output_port("motion_command_time", "base/Time").
-        doc("time when a motion_command is sent")
+        doc("time when a motion_command is sent.")
+    # locomotion mode command
+    output_port("locomotion_mode", "locomotion_switcher/LocomotionMode").doc("Locomotion mode, to     be forwarded to locomotion switcher and to override autonomous l.m. switching.")
+    # pan command
+    output_port("pan_command_out", "double")
+    # tilt command
+    output_port("tilt_command_out", "double")
 
 
     ## ------ Task Activation ------##

@@ -2,10 +2,11 @@
 
 #ifndef MOTION_GENERATOR_TASK_TASK_HPP
 #define MOTION_GENERATOR_TASK_TASK_HPP
-//#include "locomotion_switcher/locomotion_switcherTypes.hpp"
 #include "motion_generator/TaskBase.hpp"
 #include <base/commands/Joints.hpp>
 #include "controldev/JoystickTaskBase.hpp"
+#include <vector>
+#include "locomotion_switcher/locomotion_switcherTypes.hpp"
 
 
 struct MotionChange
@@ -13,8 +14,10 @@ struct MotionChange
     double time;
     double translational_vel;
     double rotational_vel;
-    bool isExecuted;
+    int locomotion_mode;
+    bool is_executed;
 };
+
 
 namespace motion_generator{
 
@@ -24,25 +27,19 @@ namespace motion_generator{
     protected:
 
         base::commands::Motion2D motion_command;
-
-        static const int N = 3;
-        MotionChange motion[N] = {
-            { 0.0, 1.0, 0.0, false},
-            { 1.0, 2.0, 0.02, false},
-            { 5.0, 3.0, 0.0, false}};
-
-        bool pointTurn, start;
-        //locomotion_switcher::LocomotionMode locomotion_mode;
+        int N, commands_ptu;
+        std::vector<MotionChange> motion;
+        std::vector<double> commands_time, commands_translation, commands_rotation;
+        std::vector<double> commands_locomotion_mode;
+        bool not_started;
         base::Time startTime, currentTime;
+        locomotion_switcher::LocomotionMode locomotion_mode;
+        double commands_pan, commands_tilt;
 
     public:
-        /** TaskContext constructor for Task
-         */
         Task(std::string const& name = "motion_generator::Task");
         Task(std::string const& name, RTT::ExecutionEngine* engine);
 
-        /** Default deconstructor of Task
-         */
 	    ~Task();
 
         bool configureHook();

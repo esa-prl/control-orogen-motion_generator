@@ -8,7 +8,8 @@
  * which case you do not need this file
  */
 
-namespace motion_generator {
+namespace motion_generator 
+{
 }
 
 #endif
