@@ -2,12 +2,13 @@
 
 #ifndef MOTION_GENERATOR_TASK_TASK_HPP
 #define MOTION_GENERATOR_TASK_TASK_HPP
-#include "motion_generator/TaskBase.hpp"
 #include <base/commands/Joints.hpp>
-#include "controldev/JoystickTaskBase.hpp"
+#include <chrono>
+#include <thread>
 #include <vector>
+#include "controldev/JoystickTaskBase.hpp"
 #include "locomotion_switcher/locomotion_switcherTypes.hpp"
-
+#include "motion_generator/TaskBase.hpp"
 
 struct MotionChange
 {
@@ -18,37 +19,36 @@ struct MotionChange
     bool is_executed;
 };
 
+namespace motion_generator
+{
 
-namespace motion_generator{
+class Task : public TaskBase
+{
+    friend class TaskBase;
 
-    class Task : public TaskBase
-    {
-	friend class TaskBase;
-    protected:
+  protected:
+    base::commands::Motion2D motion_command;
+    int N;
+    std::vector<MotionChange> motion;
+    std::vector<double> commands_time, commands_translation, commands_rotation;
+    std::vector<double> commands_locomotion_mode;
+    bool not_started;
+    base::Time startTime, currentTime;
+    locomotion_switcher::LocomotionMode locomotion_mode;
 
-        base::commands::Motion2D motion_command;
-        int N;
-        std::vector<MotionChange> motion;
-        std::vector<double> commands_time, commands_translation, commands_rotation;
-        std::vector<double> commands_locomotion_mode;
-        bool not_started;
-        base::Time startTime, currentTime;
-        locomotion_switcher::LocomotionMode locomotion_mode;
+  public:
+    Task(std::string const& name = "motion_generator::Task");
+    Task(std::string const& name, RTT::ExecutionEngine* engine);
 
-    public:
-        Task(std::string const& name = "motion_generator::Task");
-        Task(std::string const& name, RTT::ExecutionEngine* engine);
+    ~Task();
 
-	    ~Task();
-
-        bool configureHook();
-        bool startHook();
-        void updateHook();
-        void errorHook();
-        void stopHook();
-        void cleanupHook();
-    };
+    bool configureHook();
+    bool startHook();
+    void updateHook();
+    void errorHook();
+    void stopHook();
+    void cleanupHook();
+};
 }
 
 #endif
-
