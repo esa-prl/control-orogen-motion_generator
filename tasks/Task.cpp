@@ -44,9 +44,9 @@ bool Task::configureHook()
     }
 
     // sanity check: dimentions mismatch for the motion_command
-    if (commands_time.size() != commands_translation.size() ||
-        commands_time.size() != commands_rotation.size() ||
-        commands_time.size() != commands_locomotion_mode.size())
+    if (commands_time.size() != commands_translation.size()
+        || commands_time.size() != commands_rotation.size()
+        || commands_time.size() != commands_locomotion_mode.size())
     {
         std::cerr << "MOTION_GENERATOR ERROR: the fields (time, translation and rotation) of the "
                      "motion commands in the motion_generator::MotionCommands.yml file MUST be of "
@@ -55,16 +55,8 @@ bool Task::configureHook()
         return false;
     }
 
-    /*/ TBD sanity check: ptu_command out of bounds
-    if (commands_ptu = 1 && 
-        (commands_pan.size() == 0 || commands_tilt.size() == 0 ))
-    {
-        std::cerr << "MOTION_GENERATOR ERROR: the fields (time, pan and tilt) of the ptu commands in the motion_generator::MotionCommands.yml file MUST be of the same lenght" << std::endl;
-        return false;
-    }*/
-
     N = commands_time.size();
-    //std::cout << "[Motion Generator: configureHook]" << "N=" << N << std::endl;
+    // std::cout << "[Motion Generator: configureHook]" << "N=" << N << std::endl;
 
     // initialize the MotionChange vector
     for (int i = 0; i < N; i++)
@@ -98,13 +90,12 @@ void Task::updateHook()
         not_started = false;
 
         // if there is one, execute the ptu command
-        if(commands_ptu)
+        if (commands_ptu)
         {
             _pan_command_out.write(commands_pan);
             _tilt_command_out.write(commands_tilt);
             std::cout << currentTime.toSeconds() << ": "
-                << "ptu command sent = " << commands_pan << ","
-                << commands_tilt << std::endl;
+                      << "ptu command sent = " << commands_pan << "," << commands_tilt << std::endl;
         }
     }
 
@@ -114,7 +105,7 @@ void Task::updateHook()
     for (int i = 0; i < N; i++)
     {
         // check if there is a motion command to be executed
-        if ( (currentTime.toSeconds() > motion[i].time) && (!motion[i].is_executed) )
+        if ((currentTime.toSeconds() > motion[i].time) && (!motion[i].is_executed))
         {
             // read the motion command
             motion_command.translation = motion[i].translational_vel;
@@ -142,8 +133,8 @@ void Task::updateHook()
             _motion_command_time.write(base::Time::now());
 
             std::cout << currentTime.toSeconds() << ": "
-                << "motion command sent = " << motion_command.translation << ","
-                << motion_command.rotation << std::endl;
+                      << "motion command sent = " << motion_command.translation << ","
+                      << motion_command.rotation << std::endl;
         }
     }
 }

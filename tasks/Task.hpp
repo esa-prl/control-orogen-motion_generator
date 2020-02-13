@@ -22,8 +22,6 @@ struct MotionChange
 namespace motion_generator
 {
 
-namespace motion_generator{
-
     class Task : public TaskBase
     {
 	friend class TaskBase;
@@ -52,7 +50,6 @@ namespace motion_generator{
         void stopHook();
         void cleanupHook();
     };
->>>>>>> 4e4221141be9783d9b2f28fdb4cdb8a06f1cde23
 }
 
 #endif
